@@ -12,10 +12,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Page not found',
     description: 'Sorry, something went wrong, the page was not found.',
-    url: 'https://bc-76-next-practice.vercel.app/',
+    // url: 'https://bc-76-next-practice.vercel.app/',
     images: [
       {
-        url: '/public/images/notehub-og-meta-plus.jpg',
+        url: '/public/images/note.jpg',
         width: 1200,
         height: 630,
         alt: 'Ack! the page was not found.',
