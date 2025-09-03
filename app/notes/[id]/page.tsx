@@ -23,7 +23,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${note.title}`,
       description: note.content.slice(0, 30) || '',
-      // url: `https://08-zustand-wheat.vercel.app/notes/${id}`,
+      url: `https://07-routing-nextjs-nu-taupe.vercel.app/notes/${id}`,
       images: [
         {
           url: '/public/images/note.jpg',
