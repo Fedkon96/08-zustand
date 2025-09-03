@@ -6,10 +6,37 @@ import {
 } from '@tanstack/react-query';
 import NotesClient from './Notes.client';
 import { Tag } from '@/types/note';
+import { Metadata } from 'next';
 
 interface NotesProps {
   params: Promise<{ slug: string[] }>;
 }
+
+export const generateMetadata = async ({
+  params,
+}: NotesProps): Promise<Metadata> => {
+  const { slug } = await params;
+  return {
+    title: slug[0] === 'All%20notes' ? 'All notes' : `${slug[0]} notes`,
+    description:
+      slug[0] === 'All%20notes' ? 'All notes' : `Notes with tag ${slug[0]}`,
+    openGraph: {
+      title: slug[0] === 'All%20notes' ? 'All notes' : `${slug[0]} notes`,
+      description:
+        slug[0] === 'All%20notes' ? 'All notes' : `Notes with tag ${slug[0]}`,
+      url: `https://bc-76-next-practice.vercel.app/notes/filter/${slug[0]}`,
+      images: [
+        {
+          url: '/public/images/note.jpg',
+          width: 1200,
+          height: 630,
+          alt: slug[0] === 'All%20notes' ? 'All notes' : `${slug[0]} notes`,
+        },
+      ],
+    },
+  };
+};
+
 const allowedTags: Tag[] = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
 
 const Notes = async ({ params }: NotesProps) => {

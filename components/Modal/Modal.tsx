@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import css from './Modal.module.css';
 import { createPortal } from 'react-dom';
-import { HiMiniXMark } from 'react-icons/hi2';
 
 interface ModalProps {
   onClose: () => void;
@@ -31,26 +30,38 @@ const Modal = ({ onClose, children }: ModalProps) => {
     };
   }, [onClose]);
 
-  return createPortal(
+  return (
     <div
       onClick={handleBackdropClick}
       className={css.backdrop}
       role="dialog"
       aria-modal="true"
     >
-      <div className={css.modal}>
-        <button
-          className={css.closeButton}
-          onClick={onClose}
-          aria-label="Close modal"
-        >
-          <HiMiniXMark className={css.closeX} />
-        </button>
-        {children}
-      </div>
-    </div>,
-    document.body,
+      <div className={css.modal}>{children}</div>
+    </div>
   );
 };
+
+//   return createPortal(
+//     <div
+//       onClick={handleBackdropClick}
+//       className={css.backdrop}
+//       role="dialog"
+//       aria-modal="true"
+//     >
+//       <div className={css.modal}>
+//         <button
+//           className={css.closeButton}
+//           onClick={onClose}
+//           aria-label="Close modal"
+//         >
+//           <HiMiniXMark className={css.closeX} />
+//         </button>
+//         {children}
+//       </div>
+//     </div>,
+//     document.body,
+//   );
+// };
 
 export default Modal;

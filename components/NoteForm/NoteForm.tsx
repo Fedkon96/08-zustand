@@ -1,116 +1,129 @@
+'use client';
+
 import css from './NoteForm.module.css';
-import { Field, Form, Formik, ErrorMessage, type FormikHelpers } from 'formik';
-import * as Yup from 'yup';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '../../lib/api';
 import { SlArrowDown } from 'react-icons/sl';
 import { HiMiniCheck } from 'react-icons/hi2';
 import { HiMiniXMark } from 'react-icons/hi2';
-import { Tag } from '@/types/note';
+import { CreateNote } from '@/types/note';
+import { useRouter } from 'next/navigation';
+import { useNoteStore } from '@/lib/store/noteStore';
 
-interface FormValues {
-  title: string;
-  content: string;
-  tag: Tag;
-}
+import { ClipLoader } from 'react-spinners';
 
-interface NoteFormProps {
-  onClose: () => void;
-}
+const override = {
+  display: 'block',
+  margin: '0 auto',
+};
 
-// !valid
-const ValidationSchema = Yup.object().shape({
-  title: Yup.string()
-    .min(3, 'Title must have min 3 characters')
-    .max(50, 'Title must have max 50 characters')
-    .required('Required'),
-  content: Yup.string().max(500, 'Description must have max 500 characters'),
-  tag: Yup.string()
-    .oneOf(['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'])
-    .required('Required'),
-});
-// !!!
-const NoteForm = ({ onClose }: NoteFormProps) => {
+const NoteForm = () => {
+  const router = useRouter();
   const queryClient = useQueryClient();
-  const mutation = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
-      onClose();
+      router.back();
+      clearDraft();
     },
   });
-  const handleSubmit = (
-    values: FormValues,
-    actions: FormikHelpers<FormValues>,
-  ) => {
-    console.log(values);
-    mutation.mutate(values);
-    actions.resetForm();
+
+  const { draft, setDraft, clearDraft } = useNoteStore();
+
+  const handleSubmit = (formData: FormData) => {
+    const values = Object.fromEntries(formData) as unknown as CreateNote;
+    mutate(values);
   };
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLSelectElement | HTMLTextAreaElement | HTMLInputElement
+    >,
+  ) => {
+    setDraft({
+      ...draft,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
-    <Formik
-      validationSchema={ValidationSchema}
-      initialValues={{ title: '', content: '', tag: 'Todo' }}
-      onSubmit={handleSubmit}
-    >
-      <Form className={css.form}>
-        <div className={css.formGroup}>
-          <label className={css.display} htmlFor="title">
-            Title
-            <Field
-              id="title"
-              type="text"
-              name="title"
-              className={`${css.input} ${css.flex}`}
+    <form className={css.form} action={handleSubmit}>
+      <div className={css.formGroup}>
+        <label className={css.display} htmlFor="title">
+          Title
+          <input
+            id="title"
+            type="text"
+            name="title"
+            value={draft.title}
+            onChange={handleChange}
+            className={`${css.input} ${css.flex}`}
+          />
+        </label>
+      </div>
+
+      <div className={css.formGroup}>
+        <label className={css.display} htmlFor="content">
+          Content
+          <textarea
+            id="content"
+            name="content"
+            rows={8}
+            className={`${css.textarea} ${css.flex}`}
+            value={draft.content}
+            onChange={handleChange}
+            required
+          />
+        </label>
+      </div>
+
+      <div className={css.formGroup}>
+        <label className={css.arrowFather} htmlFor="tag">
+          Tag
+          <SlArrowDown className={css.arrow} />
+          <select
+            id="tag"
+            name="tag"
+            value={draft.tag}
+            onChange={handleChange}
+            className={`${css.select} ${css.flex}`}
+          >
+            <option value="Todo">Todo</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Shopping">Shopping</option>
+          </select>
+        </label>
+      </div>
+
+      <div className={css.actions}>
+        <button
+          onClick={() => router.back()}
+          type="button"
+          className={css.cancelButton}
+          aria-label="Go back"
+        >
+          <HiMiniXMark className={css.closeX} />
+        </button>
+        <button type="submit" className={css.submitButton} disabled={isPending}>
+          {isPending ? (
+            <ClipLoader
+              className={css.spinner}
+              color="#fff"
+              size={20}
+              cssOverride={override}
+              aria-label="Loading Spinner"
+              data-testid="loader"
             />
-          </label>
-          <ErrorMessage name="title" className={css.error} component="span" />
-        </div>
-
-        <div className={css.formGroup}>
-          <label className={css.display} htmlFor="content">
-            Content
-            <Field
-              as="textarea"
-              id="content"
-              name="content"
-              rows={8}
-              className={`${css.textarea} ${css.flex}`}
-            />
-          </label>
-          <ErrorMessage name="content" className={css.error} component="span" />
-        </div>
-
-        <div className={css.formGroup}>
-          <label className={css.arrowFather} htmlFor="tag">
-            Tag
-            <SlArrowDown className={css.arrow} />
-            <Field
-              as="select"
-              id="tag"
-              name="tag"
-              className={`${css.select} ${css.flex}`}
-            >
-              <option value="Todo">Todo</option>
-              <option value="Work">Work</option>
-              <option value="Personal">Personal</option>
-              <option value="Meeting">Meeting</option>
-              <option value="Shopping">Shopping</option>
-            </Field>
-          </label>
-          <ErrorMessage name="tag" className={css.error} component="span" />
-        </div>
-
-        <div className={css.actions}>
-          <button onClick={onClose} type="button" className={css.cancelButton}>
-            <HiMiniXMark className={css.closeX} />
-          </button>
-          <button type="submit" className={css.submitButton} disabled={false}>
+          ) : (
             <HiMiniCheck className={css.closeV} />
-          </button>
-        </div>
-      </Form>
-    </Formik>
+          )}
+        </button>
+      </div>
+    </form>
   );
 };
 
