@@ -60,7 +60,13 @@ const NoteForm = () => {
             value={draft.title}
             onChange={handleChange}
             className={`${css.input} ${css.flex}`}
+            minLength={3}
+            maxLength={64}
+            required
           />
+          <span className={css.inputInvalidText}>
+            The title must contain between 3 and 64 characters!
+          </span>
         </label>
       </div>
 
@@ -74,8 +80,13 @@ const NoteForm = () => {
             className={`${css.textarea} ${css.flex}`}
             value={draft.content}
             onChange={handleChange}
+            minLength={3}
+            maxLength={1000}
             required
           />
+          <span className={css.areaInvalidText}>
+            From 3 to 1000 characters!
+          </span>
         </label>
       </div>
 

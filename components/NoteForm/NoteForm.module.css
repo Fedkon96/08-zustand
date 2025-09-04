@@ -87,11 +87,6 @@
   background-color: #0b5ed7;
 }
 
-/* .submitButton:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-} */
-
 .cancelButton {
   display: flex;
   justify-content: center;
@@ -118,10 +113,23 @@
 }
 /* ? */
 .display {
+  position: relative;
   display: flex;
   flex-direction: column;
   font-size: 17px;
   width: 100%;
+  cursor: pointer;
+  padding-bottom: 20px;
+}
+
+.display span {
+  font-size: 14px;
+  color: #dc3545;
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  cursor: default;
 }
 
 .closeX {
@@ -136,4 +144,25 @@
 
 .spinner {
   background-color: #0d6efd;
+}
+
+/* ! Validation */
+/* ?input */
+.input:user-invalid {
+  border: 1px solid #d64040;
+  color: #d64040;
+}
+
+.input:user-invalid + .inputInvalidText {
+  display: block;
+}
+
+/* ?area */
+.textarea:user-invalid {
+  border: 1px solid #d64040;
+  color: #d64040;
+}
+
+.textarea:user-invalid + .areaInvalidText {
+  display: block;
 }

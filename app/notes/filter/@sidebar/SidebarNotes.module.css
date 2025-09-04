@@ -14,12 +14,16 @@
   font-size: 16px;
   display: block;
   padding: 8px 16px;
-  transition: background-color 0.3s ease;
+  transition: background-color 300ms ease;
 }
 
 .menuLink:hover {
   background-color: #444;
-  color: #ddd;
+}
+
+.menuLink::first-letter {
+  color: inherit;
+  transition: color 500ms ease;
 }
 
 .menuLink:hover::first-letter {
