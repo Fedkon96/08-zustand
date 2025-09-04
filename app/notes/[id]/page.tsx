@@ -18,15 +18,15 @@ export async function generateMetadata({
   const note = await fetchNoteId(id);
 
   return {
-    title: `${note.title}`,
-    description: note.content.slice(0, 30) || '',
+    title: note.title,
+    description: note.content.slice(0, 15),
     openGraph: {
-      title: `${note.title}`,
-      description: note.content.slice(0, 30) || '',
+      title: note.title,
+      description: note.content.slice(0, 30),
       url: `https://07-routing-nextjs-nu-taupe.vercel.app/notes/${id}`,
       images: [
         {
-          url: '/public/images/note.jpg',
+          url: '/images/note.jpg',
           width: 1200,
           height: 630,
           alt: 'Note image',

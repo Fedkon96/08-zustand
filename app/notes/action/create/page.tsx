@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/public/images/note.jpg',
+        url: '/images/note.jpg',
         width: 1200,
         height: 630,
         alt: 'An application for note-taking and organization',

@@ -30,7 +30,7 @@ const Modal = ({ onClose, children }: ModalProps) => {
     };
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div
       onClick={handleBackdropClick}
       className={css.backdrop}
@@ -38,30 +38,9 @@ const Modal = ({ onClose, children }: ModalProps) => {
       aria-modal="true"
     >
       <div className={css.modal}>{children}</div>
-    </div>
+    </div>,
+    document.body,
   );
 };
-
-//   return createPortal(
-//     <div
-//       onClick={handleBackdropClick}
-//       className={css.backdrop}
-//       role="dialog"
-//       aria-modal="true"
-//     >
-//       <div className={css.modal}>
-//         <button
-//           className={css.closeButton}
-//           onClick={onClose}
-//           aria-label="Close modal"
-//         >
-//           <HiMiniXMark className={css.closeX} />
-//         </button>
-//         {children}
-//       </div>
-//     </div>,
-//     document.body,
-//   );
-// };
 
 export default Modal;

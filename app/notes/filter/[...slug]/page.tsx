@@ -27,7 +27,7 @@ export const generateMetadata = async ({
       url: `https://07-routing-nextjs-nu-taupe.vercel.app/notes/filter/${slug[0]}`,
       images: [
         {
-          url: '/public/images/note.jpg',
+          url: '/images/note.jpg',
           width: 1200,
           height: 630,
           alt: slug[0] === 'All%20notes' ? 'All notes' : `${slug[0]} notes`,
