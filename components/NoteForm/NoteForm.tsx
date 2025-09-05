@@ -112,7 +112,7 @@ const NoteForm = () => {
 
       <div className={css.actions}>
         <button
-          onClick={() => router.push('/')}
+          onClick={() => router.back()}
           type="button"
           className={css.cancelButton}
           aria-label="Go back"
